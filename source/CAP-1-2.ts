@@ -519,6 +519,7 @@ export function _to_string_Alert_info_list_info_certainty (value: Alert_info_lis
 export function _from_string_Alert_info_list_info_certainty (str: string): Alert_info_list_info_certainty | undefined {
     return (new Map<string, Alert_info_list_info_certainty>([
         [ "likely", Alert_info_list_info_certainty.likely ],
+        [ "very likely", Alert_info_list_info_certainty.likely ], // CAP1.2 note 3: For backward compatibility with CAP 1.0, the deprecated value of “Very Likely” SHOULD be treated as equivalent to “Likely”
         [ "observed", Alert_info_list_info_certainty.observed ],
         [ "possible", Alert_info_list_info_certainty.possible ],
         [ "unknown", Alert_info_list_info_certainty.unknown ],
