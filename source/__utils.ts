@@ -1364,7 +1364,8 @@ export function _encode_choice<T>(
         }
         const encoder = choices[key];
         if (!encoder) {
-            throw new Error(`Unrecognized alternative '${key}'.`);
+            const keyStr = String(key);
+            throw new Error(`Unrecognized alternative '${keyStr}'.`);
         }
         return encoder(value[key] as T[AllUnionMemberKeys<T>], elGetter as any);
     };

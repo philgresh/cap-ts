@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import * as CAP_1_2 from "../../source/CAP-1-2";
-import { alertInfoFromXML, validateDateTime } from "../../source/fromXML";
+import * as CAP_1_2 from "../../dist/node/CAP-1-2";
+import { alertInfoFromXML, validateDateTime } from "../../dist/node/fromXML";
 import { alertInfoOne } from "./mock_data/mockData";
 
 const testXMLPath = path.resolve(__dirname, "./mock_data/mockXML.test.xml");
@@ -9,12 +9,12 @@ const testXMLPath = path.resolve(__dirname, "./mock_data/mockXML.test.xml");
 const readXML = () => fs.readFileSync(testXMLPath, { encoding: "utf-8" });
 
 describe("fromXML", () => {
-    it("creates an Alert instance from an XML", async (done) => {
+    it("creates an Alert instance from an XML", () => {
         const xml = readXML();
         let alert;
         let err;
         try {
-            alert = await CAP_1_2.Alert.fromXML(xml);
+            alert = CAP_1_2.Alert.fromXML(xml);
         } catch (e) {
             err = e;
         }
@@ -35,7 +35,6 @@ describe("fromXML", () => {
         expect(alert.incidents).toBe("mbvnpe");
         expect(alert.elem_list).toEqual([]);
         expect(alert.info_list?.length).toBe(1);
-
         const info = alert.info_list?.[0] ?? CAP_1_2.Alert_info_list_info;
         expect(info?.language).toBe("en-US");
         expect(info?.category_list?.length).toBe(1);
@@ -79,7 +78,6 @@ describe("fromXML", () => {
             "http://ntwc.arh.noaa.gov/events/PAAQ/2012/10/14/mbvnpe/1/SEAK71/SEAK71.txt"
         );
         expect(info?.contact).toBe("");
-
         const expectedParameterList = [
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventLocationName",
@@ -110,10 +108,7 @@ describe("fromXML", () => {
                 "Tsunami Seismic Information Statements for Alaska"
             ),
         ].sort();
-
         expect(info?.parameter_list?.sort()).toEqual(expectedParameterList);
-
-        done();
     });
 });
 
@@ -164,348 +159,324 @@ describe("alertInfoFromXML", () => {
         ],
     };
 
-    it("cannot accept an empty object", async (done) => {
+    it("cannot accept an empty object", () => {
         let output;
         let err;
         try {
-            output = await alertInfoFromXML({}, sent);
+            output = alertInfoFromXML({}, sent);
         } catch (e) {
-            err = `${e}`;
+            err = e.message;
         }
         expect(output).toBeUndefined();
         expect(err).toBe("Alert info argument cannot be empty.");
-        done();
     });
 
-    it("returns an `Alert_info_list_info` object when the given argument is valid", async (done) => {
+    it("returns an `Alert_info_list_info` object when the given argument is valid", () => {
         let output;
         let err;
         try {
-            output = await alertInfoFromXML(validAlertInfo, sent);
+            output = alertInfoFromXML(validAlertInfo, sent);
         } catch (e) {
-            err = `${e}`;
+            err = e.message;
         }
 
         expect(output).toEqual(alertInfoOne);
         expect(err).toBeUndefined();
-        done();
     });
 
     /**
      * `testAlertInfoFromXML` is a test-only helper. It returns an output value if the given `info` argument is valid,
      * otherwise it returns the error as a string.
      */
-    const testAlertInfoFromXML = async (testAlertInfo) => {
+    const testAlertInfoFromXML = (testAlertInfo) => {
         let output;
         let err;
         try {
-            output = await alertInfoFromXML(
+            output = alertInfoFromXML(
                 { ...validAlertInfo, ...testAlertInfo },
                 sent
             );
         } catch (e) {
-            err = `${e}`;
+            err = e.message;
         }
-
         return { output, error: err };
     };
 
     describe("category", () => {
         // Per CAP 1.2, category is a required attribute with enumerated values that may have multiple instances
-        it("returns a rejected Promise if a category is missing", async (done) => {
+        it("throws an error if a category is missing", () => {
             const info = {
                 category: [],
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe("Alert info category cannot be empty.");
-            done();
         });
 
-        it("returns a rejected Promise if a category is not an enumerated value", async (done) => {
+        it("throws an error if a category is not an enumerated value", () => {
             const invalidInfo = {
                 category: ["not-a-valid-value"],
             };
 
-            const { output, error } = await testAlertInfoFromXML(invalidInfo);
+            const { output, error } = testAlertInfoFromXML(invalidInfo);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info category: 'not-a-valid-value'."
             );
-            done();
         });
     });
 
     describe("event", () => {
         // Per CAP 1.2, event is a required attribute
-        it("returns a rejected Promise if an event is missing", async (done) => {
+        it("throws an error if an event is missing", () => {
             const info = {
                 event: undefined,
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe("Alert info event cannot be empty.");
-            done();
         });
 
-        it("returns a rejected Promise if an event is an empty string", async (done) => {
+        it("throws an error if an event is an empty string", () => {
             const info = {
                 event: "",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe("Alert info event cannot be empty.");
-            done();
         });
     });
 
     describe("responseType", () => {
         // Per CAP 1.2, responseType is an optional attribute with enumerated values that may have multiple instances
-        it("returns a rejected Promise if a responseType is not an enumerated value", async (done) => {
+        it("throws an error if a responseType is not an enumerated value", () => {
             const info = {
                 responseType: ["not-a-valid-value"],
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info responseType: 'not-a-valid-value'."
             );
-            done();
         });
     });
 
     describe("urgency", () => {
         // Per CAP 1.2, urgency is an required attribute with enumerated values
-        it("returns a rejected Promise if a urgency is missing", async (done) => {
+        it("throws an error if a urgency is missing", () => {
             const info = {
                 urgency: undefined,
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe("Alert info urgency cannot be empty.");
-            done();
         });
 
-        it("returns a rejected Promise if a urgency is not an enumerated value", async (done) => {
+        it("throws an error if a urgency is not an enumerated value", () => {
             const info = {
                 urgency: "not-a-valid-value",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info urgency 'not-a-valid-value'."
             );
-            done();
         });
     });
 
     describe("severity", () => {
         // Per CAP 1.2, severity is an required attribute with enumerated values
-        it("returns a rejected Promise if a severity is missing", async (done) => {
+        it("throws an error if a severity is missing", () => {
             const info = {
                 severity: undefined,
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe("Alert info severity cannot be empty.");
-            done();
         });
 
-        it("returns a rejected Promise if a severity is not an enumerated value", async (done) => {
+        it("throws an error if a severity is not an enumerated value", () => {
             const info = {
                 severity: "not-a-valid-value",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info severity 'not-a-valid-value'."
             );
-            done();
         });
     });
 
     describe("certainty", () => {
         // Per CAP 1.2, certainty is an required attribute with enumerated values
-        it("returns a rejected Promise if a certainty is missing", async (done) => {
+        it("throws an error if a certainty is missing", () => {
             const info = {
                 certainty: undefined,
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe("Alert info certainty cannot be empty.");
-            done();
         });
 
-        it("returns a rejected Promise if a certainty is not an enumerated value", async (done) => {
+        it("throws an error if a certainty is not an enumerated value", () => {
             const info = {
                 certainty: "not-a-valid-value",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info certainty 'not-a-valid-value'."
             );
-            done();
         });
 
-        it("handles deprecated CAP1.0 value of 'very likely'", async (done) => {
+        it("handles deprecated CAP1.0 value of 'very likely'", () => {
             const info = {
                 certainty: "Very Likely",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output.certainty).toBe(
                 CAP_1_2.Alert_info_list_info_certainty.likely
             );
             expect(error).toBeUndefined();
-            done();
         });
     });
 
     describe("eventCode", () => {
         // Per CAP 1.2, eventCode is an optional attribute with a shape of `{ valueName: string, value: string }`
-        it("returns a rejected Promise if a eventCode is not the correct shape", async (done) => {
+        it("throws an error if a eventCode is not the correct shape", () => {
             const info = {
                 eventCode: ["not-a-valid-shape"],
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info eventCode valueName: 'undefined'."
             );
-            done();
         });
     });
 
     describe("`effective` datetime", () => {
         // Per CAP 1.2, if `effective` is not included, the effective time SHALL be assumed to be the same as in
         // alert.sent, which is validated within `alertFromXML`.
-        it("returns a rejected Promise if the `effective` datetime is invalid", async (done) => {
+        it("throws an error if the `effective` datetime is invalid", () => {
             const info = {
                 effective: "not-a-valid-datetime",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info effective datetime: 'not-a-valid-datetime'."
             );
-            done();
         });
 
-        it("falls back to the given `sent` datetime if `effective` datetime is undefined", async (done) => {
+        it("falls back to the given `sent` datetime if `effective` datetime is undefined", () => {
             const info = {
                 effective: undefined,
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output.effective).toBe(sent);
             expect(error).toBeUndefined();
-            done();
         });
     });
 
     describe("`onset` datetime", () => {
-        it("returns a rejected Promise if the `onset` datetime is invalid", async (done) => {
+        it("throws an error if the `onset` datetime is invalid", () => {
             const info = {
                 onset: "not-a-valid-datetime",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info onset datetime: 'not-a-valid-datetime'."
             );
-            done();
         });
     });
 
     describe("`expires` datetime", () => {
-        it("returns a rejected Promise if the `expires` datetime is invalid", async (done) => {
+        it("throws an error if the `expires` datetime is invalid", () => {
             const info = {
                 expires: "not-a-valid-datetime",
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info expires datetime: 'not-a-valid-datetime'."
             );
-            done();
         });
     });
 
     describe("parameters", () => {
         // Per CAP 1.2, parameters is an optional attribute with a shape of `{ valueName: string, value: string }`
-        it("returns a rejected Promise if a parameters is not the correct shape", async (done) => {
+        it("throws an error if a parameter is not the correct shape", () => {
             const info = {
                 parameter: ["not-a-valid-shape"],
             };
 
-            const { output, error } = await testAlertInfoFromXML(info);
+            const { output, error } = testAlertInfoFromXML(info);
             expect(output).toBeUndefined();
             expect(error).toBe(
                 "Invalid alert info parameter valueName: 'undefined'."
             );
-            done();
         });
     });
 });
 
 describe("validateDateTime", () => {
-    it("returns a rejected Promise if a non-date argument is given", async (done) => {
+    it("throws an error if a non-date argument is given", () => {
         let err;
         let output;
         try {
-            output = await validateDateTime("just a string");
+            output = validateDateTime("just a string");
         } catch (e) {
             err = e;
         }
 
         expect(output).toBeUndefined();
         expect(err).not.toBeUndefined();
-        expect(err).toBe("Unable to parse datetime 'just a string'.");
-        done();
+        expect(err.message).toBe("Unable to parse datetime 'just a string'.");
     });
 
-    it("returns a rejected Promise if a Zulu-time offset is given", async (done) => {
+    it("throws an error if a Zulu-time offset is given", () => {
         let err;
         let output;
         try {
-            output = await validateDateTime("2002-05-24T16:49:00Z");
+            output = validateDateTime("2002-05-24T16:49:00Z");
         } catch (e) {
             err = e;
         }
 
         expect(output).toBeUndefined();
         expect(err).not.toBeUndefined();
-        expect(err).toBe("Invalid datetime '2002-05-24T16:49:00Z'.");
-        done();
+        expect(err.message).toBe("Invalid datetime '2002-05-24T16:49:00Z'.");
     });
 
-    it("returns a resolved Promise if the given datetime is valid", async (done) => {
+    it("returns a datetime string if the given datetime is valid", () => {
         let err;
         let output;
         try {
-            output = await validateDateTime("2002-05-24T16:49:00-00:00");
+            output = validateDateTime("2002-05-24T16:49:00-00:00");
         } catch (e) {
             err = e;
         }
 
-        expect(output).toEqual("2002-05-24T16:49:00-00:00");
+        expect(output.toString()).toEqual("2002-05-24T16:49:00-00:00");
         expect(err).toBeUndefined();
-        done();
     });
 });
 

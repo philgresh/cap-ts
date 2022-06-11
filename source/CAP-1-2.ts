@@ -1722,7 +1722,7 @@ export class Alert {
         return alertToXML(this);
     }
 
-    public static async fromXML (str: string): Promise<Alert> {
+    public static fromXML (str: string): Alert {
         return alertFromXML(str);
     }
 }

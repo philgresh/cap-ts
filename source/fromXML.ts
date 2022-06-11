@@ -10,8 +10,6 @@ import {
     Alert_info_list_info_parameter_list_parameter,
     Alert_info_list_info_resource_list_resource,
     Alert_info_list_info_responseType_list_responseType,
-    Value,
-    ValueName,
     _from_string_Alert_info_list_info_category_list_category,
     _from_string_Alert_info_list_info_certainty,
     _from_string_Alert_info_list_info_responseType_list_responseType,
@@ -23,91 +21,92 @@ import {
 } from "./CAP-1-2";
 
 /**
- * `validateDateTime` returns a Promise, rejecting if the given `datetime` is not in the valid format.
+ * `validateDateTime` throws an error if the given `datetime` is not in the valid format.
  * `datetime` must be in ISO8601 format, excepting Zulu time ("Z" offset).
- * @example validateDateTime("2002-05-24T16:49:00-07:00") // Promise resolved
- * @example validateDateTime("2002-05-24T16:49:00Z") // Promise rejected
+ * @example validateDateTime("2002-05-24T16:49:00-07:00") // Valid
+ * @example validateDateTime("2002-05-24T16:49:00Z") // Invalid, error thrown
  */
-export async function validateDateTime(datetime: string): Promise<string> {
+export function validateDateTime(datetime: string): string {
     if (Number.isNaN(Date.parse(datetime))) {
-        return Promise.reject(`Unable to parse datetime '${datetime}'.`);
+        throw new Error(`Unable to parse datetime '${datetime}'.`);
     }
 
     if (datetime.endsWith("Z")) {
-        return Promise.reject(`Invalid datetime '${datetime}'.`);
+        throw new Error(`Invalid datetime '${datetime}'.`);
     }
-    return Promise.resolve(datetime);
+    return datetime;
 }
 
-export async function alertInfoFromXML(
+/**
+ * `alertInfoFromXML` returns an `Alert_info_list_info` instance parsed from a given `info` arg.
+ * It uses a `sent` datetime arg as a fallback for the `info.effective` datetime.
+ */
+export function alertInfoFromXML(
     info: any,
     sent: string
-): Promise<Alert_info_list_info> {
-    if (Object.values(info ?? {}).length === 0)
-        return Promise.reject("Alert info argument cannot be empty.");
+): Alert_info_list_info {
+    if (Object.values(info ?? {}).length === 0) {
+        throw new Error("Alert info argument cannot be empty.");
+    }
 
-    if ((info?.category ?? []).length === 0)
-        return Promise.reject("Alert info category cannot be empty.");
+    if ((info?.category ?? []).length === 0) {
+        throw new Error("Alert info category cannot be empty.");
+    }
 
     const categories: Array<Alert_info_list_info_category_list_category> = [];
-    for (const cat of info.category as Array<string>) {
+    for (let i = 0; i < info.category.length; i++) {
+        const cat = info.category[i];
         const category = _from_string_Alert_info_list_info_category_list_category(
             cat
         );
         if (category === undefined) {
-            return Promise.reject(`Invalid alert info category: '${cat}'.`);
+            throw new Error(`Invalid alert info category: '${cat}'.`);
         }
         categories.push(category);
     }
 
-    if (!info.event) return Promise.reject("Alert info event cannot be empty.");
+    if (!info.event) throw new Error("Alert info event cannot be empty.");
     const event = info.event;
 
     const responseTypes: Array<Alert_info_list_info_responseType_list_responseType> = [];
-    for (const rt of info.responseType as Array<string>) {
-        const responseType = _from_string_Alert_info_list_info_responseType_list_responseType(
-            rt
-        );
-        if (responseType === undefined) {
-            return Promise.reject(`Invalid alert info responseType: '${rt}'.`);
+    if (info?.responseType?.length > 0) {
+        for (let i = 0; i < info.responseType.length; i++) {
+            const rt = info.responseType[i];
+
+            const responseType = _from_string_Alert_info_list_info_responseType_list_responseType(
+                rt
+            );
+            if (responseType === undefined) {
+                throw new Error(`Invalid alert info responseType: '${rt}'.`);
+            }
+            responseTypes.push(responseType);
         }
-        responseTypes.push(responseType);
     }
 
-    if (!info.urgency)
-        return Promise.reject("Alert info urgency cannot be empty.");
+    if (!info.urgency) throw new Error("Alert info urgency cannot be empty.");
     const urgency = _from_string_Alert_info_list_info_urgency(info.urgency);
     if (urgency === undefined)
-        return Promise.reject(`Invalid alert info urgency '${info.urgency}'.`);
+        throw new Error(`Invalid alert info urgency '${info.urgency}'.`);
 
-    if (!info.severity)
-        return Promise.reject("Alert info severity cannot be empty.");
+    if (!info.severity) throw new Error("Alert info severity cannot be empty.");
     const severity = _from_string_Alert_info_list_info_severity(info.severity);
     if (severity === undefined)
-        return Promise.reject(
-            `Invalid alert info severity '${info.severity}'.`
-        );
+        throw new Error(`Invalid alert info severity '${info.severity}'.`);
 
     if (!info.certainty)
-        return Promise.reject("Alert info certainty cannot be empty.");
+        throw new Error("Alert info certainty cannot be empty.");
     const certainty = _from_string_Alert_info_list_info_certainty(
         info.certainty
     );
     if (certainty === undefined)
-        return Promise.reject(
-            `Invalid alert info certainty '${info.certainty}'.`
-        );
-
-    type EventCodeType = {
-        valueName: ValueName;
-        value: Value;
-    };
+        throw new Error(`Invalid alert info certainty '${info.certainty}'.`);
 
     const eventCodes: Array<Alert_info_list_info_eventCode_list_eventCode> = [];
-    if (info.eventCode) {
-        for (const ec of info.eventCode as Array<EventCodeType>) {
+    if (info?.eventCode?.length > 0) {
+        for (let i = 0; i < info.eventCode.length; i++) {
+            const ec = info.eventCode[i];
             if (!ec?.valueName)
-                return Promise.reject(
+                throw new Error(
                     `Invalid alert info eventCode valueName: '${ec.valueName}'.`
                 );
             const eventCode = new Alert_info_list_info_eventCode_list_eventCode(
@@ -122,9 +121,9 @@ export async function alertInfoFromXML(
     let effective = sent;
     if (info.effective) {
         try {
-            effective = await validateDateTime(info.effective);
+            effective = validateDateTime(info.effective);
         } catch (e) {
-            return Promise.reject(
+            throw new Error(
                 `Invalid alert info effective datetime: '${info.effective}'.`
             );
         }
@@ -133,9 +132,9 @@ export async function alertInfoFromXML(
     let onset = "";
     if (info.onset) {
         try {
-            onset = await validateDateTime(info.onset);
+            onset = validateDateTime(info.onset);
         } catch (e) {
-            return Promise.reject(
+            throw new Error(
                 `Invalid alert info onset datetime: '${info.onset}'.`
             );
         }
@@ -144,27 +143,29 @@ export async function alertInfoFromXML(
     let expires = "";
     if (info.expires) {
         try {
-            expires = await validateDateTime(info.expires);
+            expires = validateDateTime(info.expires);
         } catch (e) {
-            return Promise.reject(
+            throw new Error(
                 `Invalid alert info expires datetime: '${info.expires}'.`
             );
         }
     }
 
     let parameters: Array<Alert_info_list_info_parameter_list_parameter> = [];
-    if (info.parameter) {
-        for (const param of info.parameter as Array<EventCodeType>) {
-            if (!param?.valueName)
-                return Promise.reject(
+    if (info?.parameter?.length > 0) {
+        for (let i = 0; i < info.parameter.length; i++) {
+            const param = info.parameter[i];
+            if (!param?.valueName) {
+                throw new Error(
                     `Invalid alert info parameter valueName: '${param.valueName}'.`
                 );
-            const parameter = new Alert_info_list_info_parameter_list_parameter(
-                param.valueName,
-                param.value
+            }
+            parameters.push(
+                new Alert_info_list_info_parameter_list_parameter(
+                    param.valueName,
+                    param.value
+                )
             );
-
-            parameters.push(parameter);
         }
     }
 
@@ -187,16 +188,12 @@ export async function alertInfoFromXML(
                 area.areaDesc,
                 area.polygon,
                 area.circle,
-                ((area.geocode ?? []) as Array<any>).map(
-                    (
-                        geocode
-                    ): Alert_info_list_info_area_list_area_geocode_list_geocode => {
-                        return new Alert_info_list_info_area_list_area_geocode_list_geocode(
-                            geocode.valueName,
-                            geocode.value
-                        );
-                    }
-                ),
+                ((area.geocode ?? []) as Array<any>).map((geocode) => {
+                    return new Alert_info_list_info_area_list_area_geocode_list_geocode(
+                        geocode.valueName,
+                        geocode.value
+                    );
+                }),
                 area.altitude ? Number.parseFloat(area.altitude) : undefined,
                 area.ceiling ? Number.parseFloat(area.ceiling) : undefined
             );
@@ -228,7 +225,7 @@ export async function alertInfoFromXML(
     );
 }
 
-export default async function alertFromXML(str: string) {
+export default function alertFromXML(str: string): Alert {
     const treatAsArray = [
         "alert.code",
         "alert.info",
@@ -251,43 +248,41 @@ export default async function alertFromXML(str: string) {
     try {
         doc = parser.parse(str);
     } catch (e) {
-        return Promise.reject(`Unable to parse XML document: ${e}`);
+        throw new Error(`Unable to parse XML document: ${e}`);
     }
 
     if (!doc?.alert) {
-        return Promise.reject("Unable to parse alert");
+        throw new Error("Unable to parse alert");
     }
 
     const alertDoc = doc.alert;
 
     const status = _from_string_Alert_status(alertDoc.status);
     if (status === undefined)
-        return Promise.reject(`Invalid alert status: ${alertDoc.status}`);
+        throw new Error(`Invalid alert status: ${alertDoc.status}`);
 
     const msgType = _from_string_Alert_msgType(alertDoc.msgType);
     if (msgType === undefined)
-        return Promise.reject(`Invalid alert msgType: ${alertDoc.msgType}`);
+        throw new Error(`Invalid alert msgType: ${alertDoc.msgType}`);
 
     const scope = _from_string_Alert_scope(alertDoc.scope);
     if (scope === undefined)
-        return Promise.reject(`Invalid alert scope: ${alertDoc.scope}`);
+        throw new Error(`Invalid alert scope: ${alertDoc.scope}`);
 
     let sent: string = "";
     try {
-        sent = await validateDateTime(alertDoc?.sent ?? "");
+        sent = validateDateTime(alertDoc?.sent ?? "");
     } catch (e) {
-        return Promise.reject(`Invalid alert sent: ${sent}`);
+        throw new Error(`Invalid alert 'sent' datetime: ${sent}`);
     }
 
     let infos: Array<Alert_info_list_info> = [];
     try {
-        infos = await Promise.all(
-            (alertDoc.info as Array<any>).map((info, i) =>
-                alertInfoFromXML(info, sent)
-            )
+        infos = (alertDoc.info as Array<any>).map((info, i) =>
+            alertInfoFromXML(info, sent)
         );
     } catch (e) {
-        return Promise.reject(`Unable to parse info: ${e}`);
+        throw new Error(`Unable to parse info: ${e}`);
     }
     return new Alert(
         alertDoc.identifier,
