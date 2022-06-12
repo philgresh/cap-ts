@@ -15,6 +15,7 @@
         "@babel/preset-env": "^7.18.2",
         "@babel/preset-typescript": "^7.17.12",
         "@types/benchmark": "^2.1.1",
+        "@types/lodash": "^4.14.182",
         "@types/node": "^17.0.42",
         "@types/xml2js": "^0.4.11",
         "@typescript-eslint/eslint-plugin": "^5.27.1",
@@ -52,7 +53,7 @@
     "scripts": {
         "benchmark": "node ./test/benchmark.js",
         "breaking-update": "npx ncu -u && npm install",
-        "build": "npx tsc && npx webpack",
+        "build": "npm run clean && npm run build-node && npm run build-web",
         "build-node": "npx tsc",
         "build-web": "npx webpack",
         "clean": "rm -rf dist; mkdir -p dist",
@@ -63,11 +64,10 @@
         "test:watch": "npx jest --watch"
     },
     "types": "./dist/node/index.d.ts",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "dependencies": {
         "asn1-ts": "^7.0.3",
         "fast-xml-parser": "^4.0.8",
-        "xml2js": "^0.4.23",
-        "xmlbuilder2": "^3.0.2"
+        "lodash": "^4.17.21"
     }
 }

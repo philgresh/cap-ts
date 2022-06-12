@@ -1,5 +1,4 @@
 import { XMLParser } from "fast-xml-parser";
-import type { X2jOptions } from "fast-xml-parser";
 import {
     Alert,
     Alert_info_list_info,
@@ -19,6 +18,7 @@ import {
     _from_string_Alert_scope,
     _from_string_Alert_status,
 } from "./CAP-1-2";
+import { xmlParserOptions } from "./constants";
 
 /**
  * `validateDateTime` throws an error if the given `datetime` is not in the valid format.
@@ -72,7 +72,6 @@ export function alertInfoFromXML(
     if (info?.responseType?.length > 0) {
         for (let i = 0; i < info.responseType.length; i++) {
             const rt = info.responseType[i];
-
             const responseType = _from_string_Alert_info_list_info_responseType_list_responseType(
                 rt
             );
@@ -226,23 +225,7 @@ export function alertInfoFromXML(
 }
 
 export default function alertFromXML(str: string): Alert {
-    const treatAsArray = [
-        "alert.code",
-        "alert.info",
-        "alert.info.category",
-        "alert.info.eventCode",
-        "alert.info.parameter",
-        "alert.info.resource",
-        "alert.info.responseType",
-        "alert.info.area",
-        "alert.info.area.geocode",
-    ];
-
-    const options: Partial<X2jOptions> = {
-        isArray: (_name, jpath) => !!(treatAsArray.indexOf(jpath) !== -1),
-    };
-
-    const parser = new XMLParser(options);
+    const parser = new XMLParser(xmlParserOptions);
 
     let doc;
     try {
@@ -273,7 +256,7 @@ export default function alertFromXML(str: string): Alert {
     try {
         sent = validateDateTime(alertDoc?.sent ?? "");
     } catch (e) {
-        throw new Error(`Invalid alert 'sent' datetime: ${sent}`);
+        throw new Error(`Invalid alert 'sent' datetime: '${sent}'`);
     }
 
     let infos: Array<Alert_info_list_info> = [];

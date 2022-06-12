@@ -1,18 +1,19 @@
-// import * as x from "xml2js";
+import { XMLBuilder } from "fast-xml-parser";
+import get from "lodash/get";
+import set from "lodash/set";
 import {
     Alert,
-    _to_string_Alert_msgType,
-    _to_string_Alert_scope,
-    _to_string_Alert_status,
+    Alert_info_list_info,
     _to_string_Alert_info_list_info_category_list_category,
     _to_string_Alert_info_list_info_certainty,
     _to_string_Alert_info_list_info_responseType_list_responseType,
     _to_string_Alert_info_list_info_severity,
     _to_string_Alert_info_list_info_urgency,
-    Alert_info_list_info,
+    _to_string_Alert_msgType,
+    _to_string_Alert_scope,
+    _to_string_Alert_status,
 } from "./CAP-1-2";
-import * as xmlbuilder2 from "xmlbuilder2";
-import { XMLBuilder } from "xmlbuilder2/lib/interfaces";
+import { xmlBuilderOptions } from "./constants";
 
 // <?xml version = "1.0" encoding = "UTF-8"?>
 // <alert xmlns = "urn:oasis:names:tc:emergency:cap:1.2">
@@ -48,150 +49,164 @@ import { XMLBuilder } from "xmlbuilder2/lib/interfaces";
 //   </info>
 // </alert>
 
-export
-function alertInfoToXML (info: Alert_info_list_info, doc: XMLBuilder): void {
-    const alertInfoDoc = doc.ele("info");
-    if (info.language) {
-        alertInfoDoc.ele("language").txt(info.language).up();
-    }
-    info.category_list.forEach((cl): void => {
-        alertInfoDoc.ele("category")
-            .txt(_to_string_Alert_info_list_info_category_list_category(cl)).up();
-    });
-    alertInfoDoc.ele("event").txt(info.event).up();
-    info.responseType_list.forEach((rt): void => {
-        alertInfoDoc.ele("responseType")
-            .txt(_to_string_Alert_info_list_info_responseType_list_responseType(rt)).up();
-    });
-    alertInfoDoc.ele("urgency").txt(_to_string_Alert_info_list_info_urgency(info.urgency)).up();
-    alertInfoDoc.ele("severity").txt(_to_string_Alert_info_list_info_severity(info.severity)).up();
-    alertInfoDoc.ele("certainty").txt(_to_string_Alert_info_list_info_certainty(info.certainty)).up();
-    if (info.audience) {
-        alertInfoDoc.ele("audience").txt(info.audience).up();
-    }
-    info.eventCode_list.forEach((ec) => {
-        alertInfoDoc.ele("eventCode")
-            .ele("valueName").txt(ec.valueName).up()
-            .ele("value").txt(ec.value).up()
-        .up();
-    });
-    if (info.effective) {
-        alertInfoDoc.ele("effective").txt(info.effective).up();
-    }
-    if (info.onset) {
-        alertInfoDoc.ele("onset").txt(info.onset).up();
-    }
-    if (info.expires) {
-        alertInfoDoc.ele("expires").txt(info.expires).up();
-    }
-    if (info.senderName) {
-        alertInfoDoc.ele("senderName").txt(info.senderName).up();
-    }
-    if (info.headline) {
-        alertInfoDoc.ele("headline").txt(info.headline).up();
-    }
-    if (info.description) {
-        alertInfoDoc.ele("description").txt(info.description).up();
-    }
-    if (info.instruction) {
-        alertInfoDoc.ele("instruction").txt(info.instruction).up();
-    }
-    if (info.web) {
-        alertInfoDoc.ele("web").txt(info.web).up();
-    }
-    if (info.contact) {
-        alertInfoDoc.ele("contact").txt(info.contact).up();
-    }
-    info.parameter_list.forEach((parameter) => {
-        alertInfoDoc.ele("parameter")
-            .ele("valueName").txt(parameter.valueName).up()
-            .ele("value").txt(parameter.value).up()
-        .up();
-    });
-    info.resource_list.forEach((resource) => {
-        alertInfoDoc.ele("resource")
-            .ele("resourceDesc").txt(resource.resourceDesc).up()
-            .ele("mimeType").txt(resource.mimeType).up();
-        if (resource.size) {
-            alertInfoDoc.ele("size").txt(resource.size.toString()).up();
+export function alertInfoToXML(
+    info: Alert_info_list_info
+): Record<string, any> {
+    const infoObj = {
+        urgency: _to_string_Alert_info_list_info_urgency(info.urgency),
+        severity: _to_string_Alert_info_list_info_severity(info.severity),
+        certainty: _to_string_Alert_info_list_info_certainty(info.certainty),
+    };
+
+    const setInfoAttr = (path: string, val: string) => {
+        set(infoObj, path, val);
+    };
+
+    [
+        "language",
+        "event",
+        "audience",
+        "effective",
+        "onset",
+        "expires",
+        "senderName",
+        "headline",
+        "description",
+        "instruction",
+        "web",
+        "contact",
+    ].forEach((path, i) => {
+        const val = get(info, path, undefined);
+        if (val === undefined || val === "") return;
+        if (val || val === 0) {
+            setInfoAttr(path, String(val));
         }
-        if (resource.uri) {
-            alertInfoDoc.ele("uri").txt(resource.uri).up();
-        }
-        if (resource.derefUri) {
-            alertInfoDoc.ele("derefUri").txt(resource.derefUri).up();
-        }
-        if (resource.digest) {
-            alertInfoDoc.ele("digest").txt(resource.digest).up();
-        }
-        alertInfoDoc.up();
     });
-    info.area_list.forEach((area) => {
-        alertInfoDoc.ele("area")
-            .ele("areaDesc").txt(area.areaDesc).up();
-        area.polygon_list.forEach((polygon) => {
-            alertInfoDoc.ele("polygon").txt(polygon).up();
-        });
-        area.circle_list.forEach((circle) => {
-            alertInfoDoc.ele("circle").txt(circle).up();
-        });
-        area.geocode_list.forEach((geocode) => {
-            alertInfoDoc.ele("geocode")
-                .ele("valueName").txt(geocode.valueName).up()
-                .ele("value").txt(geocode.value).up()
-            .up();
-        });
-        if (area.altitude) {
-            alertInfoDoc.ele("altitude").txt(area.altitude.toString(10)).up();
-        }
-        if (area.ceiling) {
-            alertInfoDoc.ele("ceiling").txt(area.ceiling.toString(10)).up();
-        }
-        alertInfoDoc.up();
+
+    info.category_list.forEach((cl, i) => {
+        setInfoAttr(
+            `category[${i}]`,
+            _to_string_Alert_info_list_info_category_list_category(cl)
+        );
     });
-    alertInfoDoc.up();
+    info.responseType_list.forEach((rt, i) => {
+        setInfoAttr(
+            `responseType[${i}]`,
+            _to_string_Alert_info_list_info_responseType_list_responseType(rt)
+        );
+    });
+
+    info.eventCode_list.forEach((ec, i) => {
+        setInfoAttr(`eventCode[${i}].valueName`, ec.valueName);
+        if (ec.value) setInfoAttr(`eventCode[${i}].value`, ec.value);
+    });
+
+    info.parameter_list.forEach((param, i) => {
+        setInfoAttr(`parameter[${i}].valueName`, param.valueName);
+        if (param.value) setInfoAttr(`parameter[${i}].value`, param.value);
+    });
+
+    info.resource_list.forEach((resource, i) => {
+        setInfoAttr(`resource[${i}].resourceDesc`, resource.resourceDesc);
+        if (resource.derefUri)
+            setInfoAttr(`resource[${i}].derefUri`, resource.derefUri);
+        if (resource.digest)
+            setInfoAttr(`resource[${i}].digest`, resource.digest);
+        if (resource.mimeType)
+            setInfoAttr(`resource[${i}].mimeType`, resource.mimeType);
+        if (resource.size)
+            setInfoAttr(`resource[${i}].size`, resource.size.toString());
+        if (resource.uri) setInfoAttr(`resource[${i}].uri`, resource.uri);
+    });
+
+    info.area_list.forEach((area, i) => {
+        setInfoAttr(`area[${i}].areaDesc`, area.areaDesc);
+        if (area.altitude)
+            setInfoAttr(`area[${i}].altitude`, area.altitude.toString());
+        if (area.ceiling)
+            setInfoAttr(`area[${i}].ceiling`, area.ceiling.toString());
+        if (area?.circle_list?.length > 0) {
+            console.log({ circle_list: area.circle_list });
+            area.circle_list.forEach((circle, j) => {
+                setInfoAttr(`area[${i}].circle[${j}]`, circle);
+            });
+        }
+        if (area?.polygon_list?.length > 0)
+            area.polygon_list.forEach((polygon, j) => {
+                setInfoAttr(`area[${i}].polygon[${j}]`, polygon);
+            });
+        if (area?.geocode_list?.length > 0)
+            area.geocode_list.forEach((geocode, j) => {
+                setInfoAttr(`area[${i}].geocode.valueName`, geocode.valueName);
+                if (geocode.value)
+                    setInfoAttr(`area[${i}].geocode.value`, geocode.value);
+            });
+    });
+    return infoObj;
 }
 
-export default
-function alertToXML (alert: Alert): string {
+export default function alertToXML(alert: Alert): string {
     const alertStatus = _to_string_Alert_status(alert.status);
     const alertMsgType = _to_string_Alert_msgType(alert.msgType);
     const alertScope = _to_string_Alert_scope(alert.scope);
-    const doc = xmlbuilder2.create({ version: "1.0", encoding: "UTF-8" })
-        .ele("alert", { xmlns: "urn:oasis:names:tc:emergency:cap:1.2" })
-            .ele("identifier").txt(alert.identifier).up()
-            .ele("sender").txt(alert.sender).up()
-            .ele("sent").txt(alert.sent).up()
-            .ele("status").txt(alertStatus).up()
-            .ele("msgType").txt(alertMsgType).up();
-    if (alert.source) {
-        doc.ele("source").txt(alert.source).up();
-    }
-    doc.ele("scope").txt(alertScope).up();
-    if (alert.restriction) {
-        doc.ele("restriction").txt(alert.restriction).up();
-    }
-    if (alert.addresses) {
-        doc.ele("addresses").txt(alert.addresses).up();
-    }
-    if (alert.code_list && (alert.code_list.length > 0)) {
-        alert.code_list.forEach((code) => {
-            doc.ele("code").txt(code).up();
+    const builder = new XMLBuilder(xmlBuilderOptions);
+
+    const alertObj = {
+        status: {
+            "#text": alertStatus,
+        },
+        msgType: {
+            "#text": alertMsgType,
+        },
+        scope: {
+            "#text": alertScope,
+        },
+    };
+
+    const setAlertAttr = (attrPath: string, attrText: string) => {
+        set(alertObj, attrPath, {
+            "#text": attrText,
         });
-    }
-    if (alert.note) {
-        doc.ele("note").txt(alert.note).up();
-    }
-    if (alert.references) {
-        doc.ele("references").txt(alert.references).up();
-    }
-    if (alert.incidents) {
-        doc.ele("incidents").txt(alert.incidents).up();
-    }
-    alert.info_list.forEach((info) => alertInfoToXML(info, doc));
-    alert.elem_list.forEach((elem) => {
-        doc.ele("elem").txt(elem).up();
+    };
+
+    [
+        "addresses",
+        "identifier",
+        "incidents",
+        "note",
+        "references",
+        "restriction",
+        "sender",
+        "sent",
+        "source",
+    ].forEach((path) => {
+        const val = get(alert, path, undefined);
+        if (val === undefined || val === "") return;
+        if (val || val === 0) {
+            setAlertAttr(path, String(val));
+        }
     });
-    doc.up();
-    return doc.end({ prettyPrint: true });
+
+    alert.code_list.forEach((code, i) => {
+        setAlertAttr(`code[${i}]`, code);
+    });
+
+    alert.info_list.forEach((info, i) => {
+        set(alertObj, `info[${i}]`, alertInfoToXML(info));
+    });
+
+    alert.elem_list.forEach((elem, i) => {
+        setAlertAttr(`elem[${i}]`, elem);
+    });
+
+    const doc = {
+        "?xml": {
+            "@version": "1.0",
+            alert: {
+                "@xmlns": "urn:oasis:names:tc:emergency:cap:1.2",
+                ...alertObj,
+            },
+        },
+    };
+    return builder.build(doc);
 }
