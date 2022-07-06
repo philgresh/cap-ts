@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="49" failures="1" errors="0" time="12.832">
+  <testsuite name="fromXML" errors="0" failures="0" skipped="0" timestamp="2022-06-24T22:38:39" time="11.734" tests="24">
+    <testcase classname="fromXML creates an Alert instance from an XML" name="fromXML creates an Alert instance from an XML" time="0.064">
+    </testcase>
+    <testcase classname="alertInfoFromXML cannot accept an empty object" name="alertInfoFromXML cannot accept an empty object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoFromXML returns an `Alert_info_list_info` object when the given argument is valid" name="alertInfoFromXML returns an `Alert_info_list_info` object when the given argument is valid" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoFromXML category throws an error if a category is missing" name="alertInfoFromXML category throws an error if a category is missing" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML category throws an error if a category is not an enumerated value" name="alertInfoFromXML category throws an error if a category is not an enumerated value" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML event throws an error if an event is missing" name="alertInfoFromXML event throws an error if an event is missing" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML event throws an error if an event is an empty string" name="alertInfoFromXML event throws an error if an event is an empty string" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML responseType throws an error if a responseType is not an enumerated value" name="alertInfoFromXML responseType throws an error if a responseType is not an enumerated value" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoFromXML urgency throws an error if a urgency is missing" name="alertInfoFromXML urgency throws an error if a urgency is missing" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML urgency throws an error if a urgency is not an enumerated value" name="alertInfoFromXML urgency throws an error if a urgency is not an enumerated value" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML severity throws an error if a severity is missing" name="alertInfoFromXML severity throws an error if a severity is missing" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoFromXML severity throws an error if a severity is not an enumerated value" name="alertInfoFromXML severity throws an error if a severity is not an enumerated value" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML certainty throws an error if a certainty is missing" name="alertInfoFromXML certainty throws an error if a certainty is missing" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoFromXML certainty throws an error if a certainty is not an enumerated value" name="alertInfoFromXML certainty throws an error if a certainty is not an enumerated value" time="0.002">
+    </testcase>
+    <testcase classname="alertInfoFromXML certainty handles deprecated CAP1.0 value of &apos;very likely&apos;" name="alertInfoFromXML certainty handles deprecated CAP1.0 value of &apos;very likely&apos;" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML eventCode throws an error if a eventCode is not the correct shape" name="alertInfoFromXML eventCode throws an error if a eventCode is not the correct shape" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoFromXML `effective` datetime throws an error if the `effective` datetime is invalid" name="alertInfoFromXML `effective` datetime throws an error if the `effective` datetime is invalid" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML `effective` datetime falls back to the given `sent` datetime if `effective` datetime is undefined" name="alertInfoFromXML `effective` datetime falls back to the given `sent` datetime if `effective` datetime is undefined" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML `onset` datetime throws an error if the `onset` datetime is invalid" name="alertInfoFromXML `onset` datetime throws an error if the `onset` datetime is invalid" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML `expires` datetime throws an error if the `expires` datetime is invalid" name="alertInfoFromXML `expires` datetime throws an error if the `expires` datetime is invalid" time="0">
+    </testcase>
+    <testcase classname="alertInfoFromXML parameters throws an error if a parameter is not the correct shape" name="alertInfoFromXML parameters throws an error if a parameter is not the correct shape" time="0.001">
+    </testcase>
+    <testcase classname="validateDateTime throws an error if a non-date argument is given" name="validateDateTime throws an error if a non-date argument is given" time="0">
+    </testcase>
+    <testcase classname="validateDateTime throws an error if a Zulu-time offset is given" name="validateDateTime throws an error if a Zulu-time offset is given" time="0">
+    </testcase>
+    <testcase classname="validateDateTime returns a datetime string if the given datetime is valid" name="validateDateTime returns a datetime string if the given datetime is valid" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="alertInfoToXML" errors="0" failures="0" skipped="0" timestamp="2022-06-24T22:38:39" time="11.76" tests="23">
+    <testcase classname="alertInfoToXML testAlertInfoToXML returns an object" name="alertInfoToXML testAlertInfoToXML returns an object" time="0.021">
+    </testcase>
+    <testcase classname="alertInfoToXML testAlertInfoToXML returns the mock output if no overrides are given" name="alertInfoToXML testAlertInfoToXML returns the mock output if no overrides are given" time="0.003">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `urgency` to the info object" name="alertInfoToXML assigns an `urgency` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `severity` to the info object" name="alertInfoToXML assigns a `severity` to the info object" time="0.002">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `certainty` to the info object" name="alertInfoToXML assigns a `certainty` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `language` to the info object" name="alertInfoToXML assigns a `language` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `event` to the info object" name="alertInfoToXML assigns an `event` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `audience` to the info object" name="alertInfoToXML assigns an `audience` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `effective` datetime to the info object" name="alertInfoToXML assigns an `effective` datetime to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `onset` datetime to the info object" name="alertInfoToXML assigns an `onset` datetime to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `expires` datetime to the info object" name="alertInfoToXML assigns an `expires` datetime to the info object" time="0">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `senderName` to the info object" name="alertInfoToXML assigns a `senderName` to the info object" time="0.005">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `headline` to the info object" name="alertInfoToXML assigns a `headline` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `description` to the info object" name="alertInfoToXML assigns a `description` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `instruction` to the info object" name="alertInfoToXML assigns an `instruction` to the info object" time="0">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `web` to the info object" name="alertInfoToXML assigns a `web` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `contact` to the info object" name="alertInfoToXML assigns a `contact` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `category` to the info object" name="alertInfoToXML assigns a `category` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `responseType` to the info object" name="alertInfoToXML assigns a `responseType` to the info object" time="0">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `eventCode` to the info object" name="alertInfoToXML assigns an `eventCode` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `parameter` to the info object" name="alertInfoToXML assigns a `parameter` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns a `resource` to the info object" name="alertInfoToXML assigns a `resource` to the info object" time="0.001">
+    </testcase>
+    <testcase classname="alertInfoToXML assigns an `area` to the info object" name="alertInfoToXML assigns an `area` to the info object" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="1" skipped="0" timestamp="2022-06-24T22:38:39" time="11.752" tests="2">
+    <testcase classname=" encodes correctly" name=" encodes correctly" time="0.111">
+    </testcase>
+    <testcase classname=" encodes and decodes correctly" name=" encodes and decodes correctly" time="0.021">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 3
++ Received  + 1
+
+@@ -11,13 +11,11 @@
+        &quot;area_list&quot;: Array [
+          Alert_info_list_info_area_list_area {
+            &quot;altitude&quot;: undefined,
+            &quot;areaDesc&quot;: &quot;100 miles SE of Sandspit, Haida Gwaii&quot;,
+            &quot;ceiling&quot;: undefined,
+-           &quot;circle_list&quot;: Array [
+-             &quot;51.885,-131.076 0.0&quot;,
+-           ],
++           &quot;circle_list&quot;: undefined,
+            &quot;geocode_list&quot;: Array [],
+            &quot;polygon_list&quot;: undefined,
+          },
+        ],
+        &quot;audience&quot;: &quot;&quot;,
+    at Object.toEqual (/Users/phil/workdir/github/JonathanWilbur/cap-ts/test/jest/index.test.js:37:38)
+    at Promise.then.completed (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/utils.js:333:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/utils.js:259:10)
+    at _callCircusTest (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/run.js:277:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/run.js:209:3)
+    at _runTestsForDescribeBlock (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/run.js:97:9)
+    at run (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/run.js:31:3)
+    at runAndTransformResultsToJestFormat (/Users/phil/workdir/github/JonathanWilbur/cap-ts/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:135:21)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

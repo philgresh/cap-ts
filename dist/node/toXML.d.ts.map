@@ -1,0 +1,1 @@
+{"version":3,"file":"toXML.d.ts","sourceRoot":"","sources":["../../source/toXML.ts"],"names":[],"mappings":"AACA,OAAO,EACH,KAAK,EACL,oBAAoB,EASvB,MAAM,WAAW,CAAC;AAKnB,wBAAgB,cAAc,CAC1B,IAAI,EAAE,oBAAoB,GAC3B,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC,CAgErB;AAED,MAAM,CAAC,OAAO,UAAU,UAAU,CAAC,KAAK,EAAE,KAAK,GAAG,MAAM,CAgEvD"}
