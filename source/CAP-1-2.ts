@@ -47,6 +47,7 @@ export function _to_string_Alert_status (value: Alert_status): string {
     ][value];
 }
 export function _from_string_Alert_status (str: string): Alert_status | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_status>([
         [ "actual", Alert_status.actual ],
         [ "draft", Alert_status.draft ],
@@ -104,6 +105,7 @@ export function _to_string_Alert_msgType (value: Alert_msgType): string {
     ][value];
 }
 export function _from_string_Alert_msgType (str: string): Alert_msgType | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_msgType>([
         [ "ack", Alert_msgType.ack ],
         [ "alert", Alert_msgType.alert ],
@@ -157,6 +159,7 @@ export function _to_string_Alert_scope (value: Alert_scope): string {
     ][value];
 }
 export function _from_string_Alert_scope (str: string): Alert_scope | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_scope>([
         [ "private", Alert_scope.private_ ],
         [ "public", Alert_scope.public_ ],
@@ -222,6 +225,7 @@ export function _to_string_Alert_info_list_info_category_list_category (value: A
     ][value];
 }
 export function _from_string_Alert_info_list_info_category_list_category (str: string): Alert_info_list_info_category_list_category | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_info_list_info_category_list_category>([
         [ "cbrne", Alert_info_list_info_category_list_category.cBRNE ],
         [ "env", Alert_info_list_info_category_list_category.env ],
@@ -315,6 +319,7 @@ export function _to_string_Alert_info_list_info_responseType_list_responseType (
     ][value];
 }
 export function _from_string_Alert_info_list_info_responseType_list_responseType (str: string): Alert_info_list_info_responseType_list_responseType | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_info_list_info_responseType_list_responseType>([
         [ "allclear", Alert_info_list_info_responseType_list_responseType.allClear ],
         [ "assess", Alert_info_list_info_responseType_list_responseType.assess ],
@@ -399,6 +404,7 @@ export function _to_string_Alert_info_list_info_urgency (value: Alert_info_list_
     ][value];
 }
 export function _from_string_Alert_info_list_info_urgency (str: string): Alert_info_list_info_urgency | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_info_list_info_urgency>([
         [ "expected", Alert_info_list_info_urgency.expected ],
         [ "future", Alert_info_list_info_urgency.future ],
@@ -458,6 +464,7 @@ export function _to_string_Alert_info_list_info_severity (value: Alert_info_list
     ][value];
 }
 export function _from_string_Alert_info_list_info_severity (str: string): Alert_info_list_info_severity | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_info_list_info_severity>([
         [ "extreme", Alert_info_list_info_severity.extreme ],
         [ "minor", Alert_info_list_info_severity.minor ],
@@ -517,6 +524,7 @@ export function _to_string_Alert_info_list_info_certainty (value: Alert_info_lis
     ][value];
 }
 export function _from_string_Alert_info_list_info_certainty (str: string): Alert_info_list_info_certainty | undefined {
+    if (!str) return undefined;
     return (new Map<string, Alert_info_list_info_certainty>([
         [ "likely", Alert_info_list_info_certainty.likely ],
         [ "very likely", Alert_info_list_info_certainty.likely ], // CAP1.2 note 3: For backward compatibility with CAP 1.0, the deprecated value of “Very Likely” SHOULD be treated as equivalent to “Likely”

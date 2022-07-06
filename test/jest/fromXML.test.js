@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as CAP_1_2 from "../../dist/node/CAP-1-2";
 import { alertInfoFromXML, validateDateTime } from "../../dist/node/fromXML";
-import { alertInfoOne } from "./mock_data/mockData";
+import { alertInfoOne, alertInfoObj } from "./mock_data/mockData";
 
 const testXMLPath = path.resolve(__dirname, "./mock_data/mockXML.test.xml");
 
@@ -20,19 +20,19 @@ describe("fromXML", () => {
         }
         expect(err).toBeUndefined();
         expect(alert).not.toBeUndefined();
-        expect(alert.identifier).toBe("PAAQ-1-mbvnpe");
+        expect(alert.identifier).toBe("PAAQ-1-rcz9ap");
         expect(alert.sender).toBe("ntwc@noaa.gov");
-        expect(alert.sent).toBe("2012-10-14T10:01:22-00:00");
+        expect(alert.sent).toBe("2022-06-05T00:05:50-00:00");
         expect(alert.status).toBe(CAP_1_2.Alert_status_actual);
         expect(alert.msgType).toBe(CAP_1_2.Alert_msgType_alert);
-        expect(alert.source).toBe("WCATWC");
+        expect(alert.source).toBe("NTWC");
         expect(alert.scope).toBe(CAP_1_2.Alert_scope_public_);
         expect(alert.restriction).toBe("");
         expect(alert.addresses).toBe("");
-        expect(alert.code_list?.[0]).toBe("profile:CAP-TSU:1.1");
+        expect(alert.code_list?.[0]).toBe("IPAWSv1.0");
         expect(alert.note).toBe("");
         expect(alert.references).toBe("");
-        expect(alert.incidents).toBe("mbvnpe");
+        expect(alert.incidents).toBe("rcz9ap");
         expect(alert.elem_list).toEqual([]);
         expect(alert.info_list?.length).toBe(1);
         const info = alert.info_list?.[0] ?? CAP_1_2.Alert_info_list_info;
@@ -41,7 +41,7 @@ describe("fromXML", () => {
         expect(info?.category_list?.[0]).toBe(
             CAP_1_2.Alert_info_list_info_category_list_category_geo
         );
-        expect(info?.event).toBe("Tsunami");
+        expect(info?.event).toBe("Tsunami Information");
         expect(info?.responseType_list?.length).toBe(1);
         expect(info?.responseType_list?.[0]).toBe(
             CAP_1_2.Alert_info_list_info_responseType_list_responseType_none
@@ -61,51 +61,55 @@ describe("fromXML", () => {
             valueName: "TsunamiSystemCategory",
             value: "Information",
         });
-        expect(info?.effective).toBe("2012-10-14T10:01:22-00:00");
+        expect(info?.effective).toBe("2022-06-05T00:05:50-00:00");
         expect(info?.onset).toBe("");
-        expect(info?.expires).toBe("");
+        expect(info?.expires).toBe("2022-06-05T01:05:50-00:00");
         expect(info?.senderName).toBe(
-            "NWS West Coast/Alaska Tsunami Warning Center Palmer AK"
+            "NWS National Tsunami Warning Center Palmer AK"
         );
-        expect(info?.headline).toBe("This is a tsunami information statement.");
+        expect(info?.headline).toBe("This is a Tsunami Information Statement.");
         expect(info?.description).toBe(
-            "This is a tsunami information statement.  - Event details: Preliminary magnitude 4.3 (Ml) earthquake / Lat: 60.084, Lon: -152.489 at 2012-10-14T09:58:26Z An information statement indicates that an earthquake has occurred, but does not pose a tsunami threat, or that a tsunami warning, advisory, or watch has been issued for another section of the ocean."
+            "This is a Tsunami Information Statement.  - Event details: Preliminary magnitude 5.6 (mb) earthquake / Lat: 51.885, Lon: -131.076 at 2022-06-04T23:59:13 UTC An information statement indicates that an earthquake has occurred, but does not pose a tsunami threat, or that a tsunami warning, advisory, or watch has been issued for another section of the ocean."
         );
         expect(info?.instruction).toBe(
-            "Evaluation:   There is NO tsunami danger from this earthquake.This will be the only WCATWC message issued for this event. The location and magnitude are based on preliminary information. Further information will be issued by the United States Geological Survey - earthquake.usgs.gov - or the appropriate regional seismic network."
+            "An earthquake has occurred; a tsunami is not expected.  This will be the only U.S. National Tsunami Warning Center    message issued for this event unless additional information    becomes available.   The location and magnitude are based on preliminary information.   Further information will be issued by the United States    Geological Survey (earthquake.usgs.gov) or the appropriate    regional seismic network."
         );
         expect(info?.web).toBe(
-            "http://ntwc.arh.noaa.gov/events/PAAQ/2012/10/14/mbvnpe/1/SEAK71/SEAK71.txt"
+            "http://ntwc.arh.noaa.gov/events/PAAQ/2022/06/04/rcz9ap/1/WEAK53/WEAK53.txt"
         );
         expect(info?.contact).toBe("");
         const expectedParameterList = [
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventLocationName",
-                "50 miles NW of Homer, Alaska"
+                "100 miles SE of Sandspit, Haida Gwaii"
             ),
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventPreliminaryMagnitude",
-                4.3
+                5.6
             ),
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventPreliminaryMagnitudeType",
-                "Ml"
+                "mb"
             ),
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventOriginTime",
-                "2012-10-14T09:58:26-00:00"
+                "2022-06-04T23:59:13-00:00"
             ),
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventDepth",
-                "79 kilometers"
+                "13 kilometers"
             ),
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
                 "EventLatLon",
-                "60.084,-152.489 0.000"
+                "51.885,-131.076 0.000"
             ),
             new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
-                "SEAK71",
-                "Tsunami Seismic Information Statements for Alaska"
+                "WEAK53",
+                "Public Tsunami Information Statements for AK, BC, and US West Coast"
+            ),
+            new CAP_1_2.Alert_info_list_info_parameter_list_parameter(
+                "EAS-ORG",
+                "WXR"
             ),
         ].sort();
         expect(info?.parameter_list?.sort()).toEqual(expectedParameterList);
@@ -114,50 +118,6 @@ describe("fromXML", () => {
 
 describe("alertInfoFromXML", () => {
     const sent = "2022-06-08T12:55:00-07:00";
-
-    const validAlertInfo = {
-        language: "en-US",
-        category: ["Fire"],
-        event: "the big event",
-        responseType: ["Evacuate"],
-        urgency: "Immediate",
-        severity: "Extreme",
-        certainty: "Observed",
-        audience: "gamers",
-        eventCode: [
-            {
-                valueName: "TsunamiSystemCategory",
-                value: "Information",
-            },
-        ],
-        effective: "2002-05-24T16:49:00-07:00",
-        onset: "2002-05-24T16:49:00-07:00",
-        expires: "2002-05-25T16:49:00-07:00",
-        senderName: "big J",
-        headline: "BREAKING NEWS",
-        description: "desc",
-        instruction: "get out",
-        web: "https://github.com",
-        contact: "Jonathan Wilbur",
-        parameter: [
-            {
-                valueName: "EventLocationName",
-                value: "50 miles NW of Homer, Alaska",
-            },
-            {
-                valueName: "EventPreliminaryMagnitude",
-                value: 4.3,
-            },
-        ],
-        resource: [
-            {
-                resourceDesc: "Event Data as a JSON document",
-                mimeType: "application/json",
-                uri:
-                    "http://ntwc.arh.noaa.gov/events/PAAQ/2012/10/14/mbvnpe/1/SEAK71/PAAQ.json",
-            },
-        ],
-    };
 
     it("cannot accept an empty object", () => {
         let output;
@@ -175,13 +135,13 @@ describe("alertInfoFromXML", () => {
         let output;
         let err;
         try {
-            output = alertInfoFromXML(validAlertInfo, sent);
+            output = alertInfoFromXML(alertInfoObj, sent);
         } catch (e) {
             err = e.message;
         }
 
-        expect(output).toEqual(alertInfoOne);
         expect(err).toBeUndefined();
+        expect(output).toEqual(alertInfoOne);
     });
 
     /**
@@ -193,7 +153,7 @@ describe("alertInfoFromXML", () => {
         let err;
         try {
             output = alertInfoFromXML(
-                { ...validAlertInfo, ...testAlertInfo },
+                { ...alertInfoObj, ...testAlertInfo },
                 sent
             );
         } catch (e) {

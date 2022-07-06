@@ -55,7 +55,7 @@ export function alertInfoFromXML(
 
     const categories: Array<Alert_info_list_info_category_list_category> = [];
     for (let i = 0; i < info.category.length; i++) {
-        const cat = info.category[i];
+        const cat = info?.category?.[i] ?? "";
         const category = _from_string_Alert_info_list_info_category_list_category(
             cat
         );
@@ -65,13 +65,15 @@ export function alertInfoFromXML(
         categories.push(category);
     }
 
-    if (!info.event) throw new Error("Alert info event cannot be empty.");
+    if (!info.event) {
+        throw new Error("Alert info event cannot be empty.");
+    }
     const event = info.event;
 
     const responseTypes: Array<Alert_info_list_info_responseType_list_responseType> = [];
     if (info?.responseType?.length > 0) {
         for (let i = 0; i < info.responseType.length; i++) {
-            const rt = info.responseType[i];
+            const rt = String(info?.responseType?.[i] ?? "");
             const responseType = _from_string_Alert_info_list_info_responseType_list_responseType(
                 rt
             );
@@ -83,19 +85,23 @@ export function alertInfoFromXML(
     }
 
     if (!info.urgency) throw new Error("Alert info urgency cannot be empty.");
-    const urgency = _from_string_Alert_info_list_info_urgency(info.urgency);
+    const urgency = _from_string_Alert_info_list_info_urgency(
+        String(info?.urgency ?? "")
+    );
     if (urgency === undefined)
         throw new Error(`Invalid alert info urgency '${info.urgency}'.`);
 
     if (!info.severity) throw new Error("Alert info severity cannot be empty.");
-    const severity = _from_string_Alert_info_list_info_severity(info.severity);
+    const severity = _from_string_Alert_info_list_info_severity(
+        String(info?.severity ?? "")
+    );
     if (severity === undefined)
         throw new Error(`Invalid alert info severity '${info.severity}'.`);
 
     if (!info.certainty)
         throw new Error("Alert info certainty cannot be empty.");
     const certainty = _from_string_Alert_info_list_info_certainty(
-        info.certainty
+        String(info?.certainty ?? "")
     );
     if (certainty === undefined)
         throw new Error(`Invalid alert info certainty '${info.certainty}'.`);
@@ -183,6 +189,14 @@ export function alertInfoFromXML(
 
     const areas = ((info.area ?? []) as Array<any>).map(
         (area): Alert_info_list_info_area_list_area => {
+            const altitude =
+                area.altitude === undefined
+                    ? undefined
+                    : Number.parseFloat(area.altitude);
+            const ceiling =
+                area.ceiling === undefined
+                    ? undefined
+                    : Number.parseFloat(area.ceiling);
             return new Alert_info_list_info_area_list_area(
                 area.areaDesc,
                 area.polygon,
@@ -193,8 +207,8 @@ export function alertInfoFromXML(
                         geocode.value
                     );
                 }),
-                area.altitude ? Number.parseFloat(area.altitude) : undefined,
-                area.ceiling ? Number.parseFloat(area.ceiling) : undefined
+                altitude,
+                ceiling
             );
         }
     );
@@ -240,15 +254,15 @@ export default function alertFromXML(str: string): Alert {
 
     const alertDoc = doc.alert;
 
-    const status = _from_string_Alert_status(alertDoc.status);
+    const status = _from_string_Alert_status(String(alertDoc?.status ?? ""));
     if (status === undefined)
         throw new Error(`Invalid alert status: ${alertDoc.status}`);
 
-    const msgType = _from_string_Alert_msgType(alertDoc.msgType);
+    const msgType = _from_string_Alert_msgType(String(alertDoc?.msgType ?? ""));
     if (msgType === undefined)
         throw new Error(`Invalid alert msgType: ${alertDoc.msgType}`);
 
-    const scope = _from_string_Alert_scope(alertDoc.scope);
+    const scope = _from_string_Alert_scope(String(alertDoc?.scope ?? ""));
     if (scope === undefined)
         throw new Error(`Invalid alert scope: ${alertDoc.scope}`);
 
