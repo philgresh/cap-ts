@@ -57,7 +57,6 @@ function alertInfoToXML(info) {
     info.area_list.forEach((area, i) => {
         _.set(infoObj, `area[${i}]`, area);
     });
-    console.log(JSON.stringify({ infoObj }, null, 2));
     return infoObj;
 }
 exports.alertInfoToXML = alertInfoToXML;
@@ -109,6 +108,7 @@ function alertToXML(alert) {
     alert.elem_list.forEach((elem, i) => {
         setAlertAttr(`elem[${i}]`, elem);
     });
+    console.log(JSON.stringify(alert, null, 2));
     const doc = {
         "?xml": {
             "@version": "1.0",
