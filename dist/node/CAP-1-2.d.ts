@@ -198,6 +198,17 @@ export declare const _root_component_type_list_2_spec_for_Alert_info_list_info_a
 export declare const _extension_additions_list_spec_for_Alert_info_list_info_area_list_area_geocode_list_geocode: __utils.ComponentSpec[];
 export declare function _decode_Alert_info_list_info_area_list_area_geocode_list_geocode(el: asn1.ASN1Element): Alert_info_list_info_area_list_area_geocode_list_geocode;
 export declare function _encode_Alert_info_list_info_area_list_area_geocode_list_geocode(value: Alert_info_list_info_area_list_area_geocode_list_geocode, elGetter: __utils.ASN1Encoder<Alert_info_list_info_area_list_area_geocode_list_geocode>): asn1.ASN1Element;
+export declare type Alert_info_list_info_area_list_area_toJSON_type = {
+    areaDesc: string;
+    polygon_list: string[];
+    circle_list: string[];
+    geocode_list: {
+        valueName: string;
+        value: any;
+    }[];
+    altitude?: number;
+    ceiling?: number;
+};
 export declare class Alert_info_list_info_area_list_area {
     readonly areaDesc: XSD.String;
     readonly polygon_list: XSD.String[];
@@ -212,6 +223,38 @@ export declare const _root_component_type_list_2_spec_for_Alert_info_list_info_a
 export declare const _extension_additions_list_spec_for_Alert_info_list_info_area_list_area: __utils.ComponentSpec[];
 export declare function _decode_Alert_info_list_info_area_list_area(el: asn1.ASN1Element): Alert_info_list_info_area_list_area;
 export declare function _encode_Alert_info_list_info_area_list_area(value: Alert_info_list_info_area_list_area, elGetter: __utils.ASN1Encoder<Alert_info_list_info_area_list_area>): asn1.ASN1Element;
+export declare type Alert_info_list_info_toJSON_type = {
+    category_list: string[];
+    event: string;
+    responseType_list: string[];
+    urgency: string;
+    severity: string;
+    certainty: string;
+    eventCode_list: {
+        valueName: string;
+        value: any;
+    }[];
+    parameter_list: {
+        valueName: string;
+        value: any;
+    }[];
+    resource_list: {
+        valueName: string;
+        value: any;
+    }[];
+    area_list: Alert_info_list_info_area_list_area_toJSON_type[];
+    language?: string;
+    audience?: string;
+    effective?: string;
+    onset?: string;
+    expires?: string;
+    senderName?: string;
+    headline?: string;
+    description?: string;
+    instruction?: string;
+    web?: string;
+    contact?: string;
+};
 export declare class Alert_info_list_info {
     readonly language: asn1.OPTIONAL<XSD.Language>;
     readonly category_list: Alert_info_list_info_category_list_category[];
@@ -235,12 +278,30 @@ export declare class Alert_info_list_info {
     readonly resource_list: Alert_info_list_info_resource_list_resource[];
     readonly area_list: Alert_info_list_info_area_list_area[];
     constructor(language: asn1.OPTIONAL<XSD.Language>, category_list: Alert_info_list_info_category_list_category[], event: XSD.String, responseType_list: Alert_info_list_info_responseType_list_responseType[], urgency: Alert_info_list_info_urgency, severity: Alert_info_list_info_severity, certainty: Alert_info_list_info_certainty, audience: asn1.OPTIONAL<XSD.String>, eventCode_list: Alert_info_list_info_eventCode_list_eventCode[], effective: asn1.OPTIONAL<XSD.DateTime>, onset: asn1.OPTIONAL<XSD.DateTime>, expires: asn1.OPTIONAL<XSD.DateTime>, senderName: asn1.OPTIONAL<XSD.String>, headline: asn1.OPTIONAL<XSD.String>, description: asn1.OPTIONAL<XSD.String>, instruction: asn1.OPTIONAL<XSD.String>, web: asn1.OPTIONAL<XSD.AnyURI>, contact: asn1.OPTIONAL<XSD.String>, parameter_list: Alert_info_list_info_parameter_list_parameter[], resource_list: Alert_info_list_info_resource_list_resource[], area_list: Alert_info_list_info_area_list_area[]);
+    toJSON(): Alert_info_list_info_toJSON_type;
 }
 export declare const _root_component_type_list_1_spec_for_Alert_info_list_info: __utils.ComponentSpec[];
 export declare const _root_component_type_list_2_spec_for_Alert_info_list_info: __utils.ComponentSpec[];
 export declare const _extension_additions_list_spec_for_Alert_info_list_info: __utils.ComponentSpec[];
 export declare function _decode_Alert_info_list_info(el: asn1.ASN1Element): Alert_info_list_info;
 export declare function _encode_Alert_info_list_info(value: Alert_info_list_info, elGetter: __utils.ASN1Encoder<Alert_info_list_info>): asn1.ASN1Element;
+export declare type Alert_toJSON_type = {
+    identifier: string;
+    sender: string;
+    sent: string;
+    status: string;
+    msgType: string;
+    scope: string;
+    code_list: string[];
+    info_list: Alert_info_list_info_toJSON_type[];
+    elem_list: string[];
+    addresses?: string;
+    references?: string;
+    source?: string;
+    incidents?: string;
+    restriction?: string;
+    note?: string;
+};
 export declare class Alert {
     readonly identifier: XSD.String;
     readonly sender: XSD.String;
@@ -260,6 +321,7 @@ export declare class Alert {
     constructor(identifier: XSD.String, sender: XSD.String, sent: XSD.DateTime, status: Alert_status, msgType: Alert_msgType, source: asn1.OPTIONAL<XSD.String>, scope: Alert_scope, restriction: asn1.OPTIONAL<XSD.String>, addresses: asn1.OPTIONAL<XSD.String>, code_list: XSD.String[], note: asn1.OPTIONAL<XSD.String>, references: asn1.OPTIONAL<XSD.String>, incidents: asn1.OPTIONAL<XSD.String>, info_list: Alert_info_list_info[], elem_list: XSD.String[]);
     toXML(): string;
     static fromXML(str: string): Alert;
+    toJSON(): Alert_toJSON_type;
 }
 export declare const _root_component_type_list_1_spec_for_Alert: __utils.ComponentSpec[];
 export declare const _root_component_type_list_2_spec_for_Alert: __utils.ComponentSpec[];

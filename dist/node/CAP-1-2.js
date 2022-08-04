@@ -847,6 +847,16 @@ class Alert_info_list_info {
         this.resource_list = resource_list;
         this.area_list = area_list;
     }
+    toJSON() {
+        return {
+            ...this,
+            category_list: this.category_list.map((category) => _to_string_Alert_info_list_info_category_list_category(category)),
+            responseType_list: this.responseType_list.map((responseType) => _to_string_Alert_info_list_info_responseType_list_responseType(responseType)),
+            urgency: _to_string_Alert_info_list_info_urgency(this.urgency),
+            severity: _to_string_Alert_info_list_info_severity(this.severity),
+            certainty: _to_string_Alert_info_list_info_certainty(this.certainty),
+        };
+    }
 }
 exports.Alert_info_list_info = Alert_info_list_info;
 exports._root_component_type_list_1_spec_for_Alert_info_list_info = [
@@ -1050,6 +1060,15 @@ class Alert {
     }
     static fromXML(str) {
         return (0, fromXML_1.default)(str);
+    }
+    toJSON() {
+        return {
+            ...this,
+            status: _to_string_Alert_status(this.status),
+            msgType: _to_string_Alert_msgType(this.msgType),
+            scope: _to_string_Alert_scope(this.scope),
+            info_list: this.info_list.map(infoList => infoList.toJSON()),
+        };
     }
 }
 exports.Alert = Alert;
