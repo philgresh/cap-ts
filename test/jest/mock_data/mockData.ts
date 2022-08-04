@@ -1,4 +1,4 @@
-import * as CAP_1_2 from "../../../source/CAP-1-2";
+import * as CAP_1_2 from "../../../dist/node/CAP-1-2";
 
 const identifier = "PAAQ-1-rcz9ap";
 const language: CAP_1_2.Language = "en-US";

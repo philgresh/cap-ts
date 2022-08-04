@@ -1067,6 +1067,15 @@ export function _encode_Alert_info_list_info_area_list_area_geocode_list_geocode
     );
 }
 
+export type Alert_info_list_info_area_list_area_toJSON_type = {
+    areaDesc: string;
+    polygon_list: string[];
+    circle_list: string[];
+    geocode_list: { valueName: string, value: any }[];
+    altitude?: number;
+    ceiling?: number;
+}
+
 export class Alert_info_list_info_area_list_area {
     constructor(
         readonly areaDesc: XSD.String,
@@ -1246,6 +1255,30 @@ export function _encode_Alert_info_list_info_area_list_area(
     );
 }
 
+export type Alert_info_list_info_toJSON_type = {
+    category_list: string[],
+    event: string,
+    responseType_list: string[],
+    urgency: string,
+    severity: string,
+    certainty: string,
+    eventCode_list: { valueName: string, value: any }[],
+    parameter_list: { valueName: string, value: any }[],
+    resource_list: { valueName: string, value: any }[],
+    area_list: Alert_info_list_info_area_list_area_toJSON_type[]
+    language?: string;
+    audience?: string;
+    effective?: string;
+    onset?: string;
+    expires?: string;
+    senderName?: string;
+    headline?: string;
+    description?: string;
+    instruction?: string;
+    web?: string;
+    contact?: string;
+}
+
 export class Alert_info_list_info {
     constructor(
         readonly language: asn1.OPTIONAL<XSD.Language>,
@@ -1270,6 +1303,21 @@ export class Alert_info_list_info {
         readonly resource_list: Alert_info_list_info_resource_list_resource[],
         readonly area_list: Alert_info_list_info_area_list_area[]
     ) {}
+
+    toJSON(): Alert_info_list_info_toJSON_type {
+        return {
+            ...this,
+            category_list: this.category_list.map((category) =>
+                _to_string_Alert_info_list_info_category_list_category(category)
+            ),
+            responseType_list: this.responseType_list.map((responseType) =>
+                _to_string_Alert_info_list_info_responseType_list_responseType(responseType)
+            ),
+            urgency: _to_string_Alert_info_list_info_urgency(this.urgency),
+            severity: _to_string_Alert_info_list_info_severity(this.severity),
+            certainty: _to_string_Alert_info_list_info_certainty(this.certainty),
+        };
+    }
 }
 export const _root_component_type_list_1_spec_for_Alert_info_list_info: __utils.ComponentSpec[] = [
     new __utils.ComponentSpec(
@@ -1707,6 +1755,24 @@ export function _encode_Alert_info_list_info(
     return _cached_encoder_for_Alert_info_list_info(value, elGetter);
 }
 
+export type Alert_toJSON_type = {
+    identifier: string,
+    sender: string,
+    sent: string,
+    status: string,
+    msgType: string,
+    scope: string,
+    code_list: string[],
+    info_list: Alert_info_list_info_toJSON_type[],
+    elem_list: string[]
+    addresses?: string,
+    references?: string,
+    source?: string,
+    incidents?: string,
+    restriction?: string,
+    note?: string,
+}
+
 export class Alert {
     constructor(
         readonly identifier: XSD.String,
@@ -1732,6 +1798,16 @@ export class Alert {
 
     public static fromXML (str: string): Alert {
         return alertFromXML(str);
+    }
+
+    toJSON(): Alert_toJSON_type {
+        return {
+            ...this,
+            status: _to_string_Alert_status(this.status),
+            msgType: _to_string_Alert_msgType(this.msgType),
+            scope: _to_string_Alert_scope(this.scope),
+            info_list: this.info_list.map(infoList => infoList.toJSON()),
+        }
     }
 }
 export const _root_component_type_list_1_spec_for_Alert: __utils.ComponentSpec[] = [
